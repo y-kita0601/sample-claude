@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Sample Claude',
-  description: 'Next.js app created with Claude',
+  title: 'TechCorp | 革新的ITソリューション',
+  description: 'TechCorpは最先端の技術とイノベーションで企業のデジタル変革を支援するITソリューション企業です。',
 }
 
 export default function RootLayout({
