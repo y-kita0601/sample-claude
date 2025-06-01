@@ -5,10 +5,8 @@ on:
     types: [created]
   pull_request_review_comment:
     types: [created]
-  issues:
-    types: [opened, assigned]
-  pull_request_review:
-    types: [submitted]
+  # issues の opened/assigned を削除
+  # pull_request_review も必要に応じて調整
 
 jobs:
   claude-response:
@@ -21,11 +19,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: "1.2.11"
 
       - name: Run Claude Code Action
         uses: anthropics/claude-code-action@beta
