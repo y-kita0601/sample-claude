@@ -155,8 +155,7 @@ export default function ScrumManagement() {
             background: 'linear-gradient(135deg, #667eea, #764ba2)',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            textFillColor: 'transparent'
+            WebkitTextFillColor: 'transparent'
           }}>
             スクラム開発管理ツール
           </h1>
