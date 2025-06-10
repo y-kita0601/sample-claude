@@ -1,49 +1,40 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useScrum } from '@/hooks/useScrum'
 
 type Phase = 'backlog' | 'daily' | 'retro'
 
-interface BacklogItem {
-  id: string
-  title: string
-  description: string
-  storyPoints: number
-  priority: 'high' | 'medium' | 'low'
-  status: 'todo' | 'inprogress' | 'done'
-}
-
-interface DailyUpdate {
-  id: string
-  member: string
-  yesterday: string
-  today: string
-  blockers: string
-  date: string
-}
-
-interface RetroItem {
-  id: string
-  type: 'good' | 'bad' | 'improve'
-  content: string
-  votes: number
-}
-
 export default function ScrumManagement() {
   const [currentPhase, setCurrentPhase] = useState<Phase>('backlog')
-  const [sprintNumber, setSprintNumber] = useState(1)
   
-  // Backlog state
-  const [backlogItems, setBacklogItems] = useState<BacklogItem[]>([])
+  // Supabase hook for scrum data
+  const {
+    currentSprint,
+    backlogItems,
+    dailyUpdates,
+    retroItems,
+    loading,
+    error,
+    createBacklogItem,
+    updateBacklogItem,
+    deleteBacklogItem,
+    createDailyUpdate,
+    deleteDailyUpdate,
+    createRetroItem,
+    updateRetroItem,
+    deleteRetroItem,
+    startNextSprint
+  } = useScrum()
+  
+  // Form state
   const [newItem, setNewItem] = useState({
     title: '',
     description: '',
-    storyPoints: 1,
+    story_points: 1,
     priority: 'medium' as const
   })
   
-  // Daily meeting state
-  const [dailyUpdates, setDailyUpdates] = useState<DailyUpdate[]>([])
   const [newUpdate, setNewUpdate] = useState({
     member: '',
     yesterday: '',
@@ -51,84 +42,109 @@ export default function ScrumManagement() {
     blockers: ''
   })
   
-  // Retrospective state
-  const [retroItems, setRetroItems] = useState<RetroItem[]>([])
   const [newRetroItem, setNewRetroItem] = useState({
     type: 'good' as const,
     content: ''
   })
 
-  // Backlog functions
-  const addBacklogItem = () => {
-    if (newItem.title.trim()) {
-      const item: BacklogItem = {
-        id: Date.now().toString(),
-        ...newItem,
-        status: 'todo'
-      }
-      setBacklogItems([...backlogItems, item])
-      setNewItem({ title: '', description: '', storyPoints: 1, priority: 'medium' })
-    }
-  }
-
-  const updateItemStatus = (id: string, status: BacklogItem['status']) => {
-    setBacklogItems(items => 
-      items.map(item => item.id === id ? { ...item, status } : item)
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      }}>
+        <div style={{ color: 'white', fontSize: '1.25rem' }}>読み込み中...</div>
+      </div>
     )
   }
 
-  const deleteBacklogItem = (id: string) => {
-    setBacklogItems(items => items.filter(item => item.id !== id))
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      }}>
+        <div style={{ color: 'white', fontSize: '1.25rem' }}>エラー: {error}</div>
+      </div>
+    )
+  }
+
+  // Backlog functions
+  const addBacklogItem = async () => {
+    if (newItem.title.trim()) {
+      const result = await createBacklogItem({
+        title: newItem.title,
+        description: newItem.description || '',
+        story_points: newItem.story_points,
+        priority: newItem.priority,
+        status: 'todo'
+      })
+      
+      if (result.success) {
+        setNewItem({ title: '', description: '', story_points: 1, priority: 'medium' })
+      }
+    }
+  }
+
+  const updateItemStatus = async (id: string, status: 'todo' | 'inprogress' | 'done') => {
+    await updateBacklogItem(id, { status })
+  }
+
+  const handleDeleteBacklogItem = async (id: string) => {
+    await deleteBacklogItem(id)
   }
 
   // Daily meeting functions
-  const addDailyUpdate = () => {
+  const addDailyUpdate = async () => {
     if (newUpdate.member.trim() && newUpdate.today.trim()) {
-      const update: DailyUpdate = {
-        id: Date.now().toString(),
-        ...newUpdate,
-        date: new Date().toLocaleDateString('ja-JP')
+      const result = await createDailyUpdate({
+        member: newUpdate.member,
+        yesterday: newUpdate.yesterday || '',
+        today: newUpdate.today,
+        blockers: newUpdate.blockers || ''
+      })
+      
+      if (result.success) {
+        setNewUpdate({ member: '', yesterday: '', today: '', blockers: '' })
       }
-      setDailyUpdates([update, ...dailyUpdates])
-      setNewUpdate({ member: '', yesterday: '', today: '', blockers: '' })
     }
   }
 
-  const deleteDailyUpdate = (id: string) => {
-    setDailyUpdates(updates => updates.filter(update => update.id !== id))
+  const handleDeleteDailyUpdate = async (id: string) => {
+    await deleteDailyUpdate(id)
   }
 
   // Retrospective functions
-  const addRetroItem = () => {
+  const addRetroItem = async () => {
     if (newRetroItem.content.trim()) {
-      const item: RetroItem = {
-        id: Date.now().toString(),
-        ...newRetroItem,
+      const result = await createRetroItem({
+        type: newRetroItem.type,
+        content: newRetroItem.content,
         votes: 0
+      })
+      
+      if (result.success) {
+        setNewRetroItem({ type: 'good', content: '' })
       }
-      setRetroItems([...retroItems, item])
-      setNewRetroItem({ type: 'good', content: '' })
     }
   }
 
-  const voteRetroItem = (id: string) => {
-    setRetroItems(items =>
-      items.map(item => 
-        item.id === id ? { ...item, votes: item.votes + 1 } : item
-      )
-    )
+  const voteRetroItem = async (id: string) => {
+    const item = retroItems.find(item => item.id === id)
+    if (item) {
+      await updateRetroItem(id, { votes: item.votes + 1 })
+    }
   }
 
-  const deleteRetroItem = (id: string) => {
-    setRetroItems(items => items.filter(item => item.id !== id))
+  const handleDeleteRetroItem = async (id: string) => {
+    await deleteRetroItem(id)
   }
 
-  const nextSprint = () => {
-    setSprintNumber(prev => prev + 1)
-    setBacklogItems(items => items.map(item => ({ ...item, status: 'todo' })))
-    setDailyUpdates([])
-    setRetroItems([])
-    setCurrentPhase('backlog')
+  const nextSprint = async () => {
+    const result = await startNextSprint()
+    if (result.success) {
+      setCurrentPhase('backlog')
+    }
   }
 
   return (
@@ -165,7 +181,7 @@ export default function ScrumManagement() {
             fontSize: '0.95rem',
             fontWeight: '500'
           }}>
-            スプリント {sprintNumber} - 2週間開発サイクル
+            スプリント {currentSprint?.number || 1} - 2週間開発サイクル
           </p>
         </div>
         <div>
@@ -350,8 +366,8 @@ export default function ScrumManagement() {
                       ストーリーポイント
                     </label>
                     <select
-                      value={newItem.storyPoints}
-                      onChange={(e) => setNewItem({ ...newItem, storyPoints: Number(e.target.value) })}
+                      value={newItem.story_points}
+                      onChange={(e) => setNewItem({ ...newItem, story_points: Number(e.target.value) })}
                       style={{
                         width: '100%',
                         padding: '0.75rem 1rem',
@@ -555,7 +571,7 @@ export default function ScrumManagement() {
                                 borderRadius: '1rem',
                                 fontWeight: '600'
                               }}>
-                                SP: {item.storyPoints}
+                                SP: {item.story_points}
                               </span>
                               <div style={{ display: 'flex', gap: '0.5rem' }}>
                                 {status !== 'todo' && (
@@ -599,7 +615,7 @@ export default function ScrumManagement() {
                                   </button>
                                 )}
                                 <button
-                                  onClick={() => deleteBacklogItem(item.id)}
+                                  onClick={() => handleDeleteBacklogItem(item.id)}
                                   style={{
                                     background: 'linear-gradient(135deg, #ef4444, #dc2626)',
                                     color: 'white',
@@ -872,15 +888,29 @@ export default function ScrumManagement() {
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   {dailyUpdates.map(update => (
-                    <div key={update.id} className="service-card" style={{ padding: '1.5rem' }}>
+                    <div key={update.id} style={{ 
+                      background: 'rgba(248, 250, 252, 0.8)',
+                      border: '1px solid rgba(228, 230, 235, 0.5)',
+                      borderRadius: '0.75rem',
+                      padding: '1.5rem',
+                      transition: 'all 0.3s ease'
+                    }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
                         <h4 style={{ margin: 0, color: '#1f2937' }}>{update.member}</h4>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                          <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>{update.date}</span>
+                          <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>{new Date(update.date).toLocaleDateString('ja-JP')}</span>
                           <button
-                            onClick={() => deleteDailyUpdate(update.id)}
-                            className="action-btn delete"
-                            style={{ fontSize: '0.75rem' }}
+                            onClick={() => handleDeleteDailyUpdate(update.id)}
+                            style={{
+                              background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '0.5rem',
+                              padding: '0.25rem 0.5rem',
+                              fontSize: '0.75rem',
+                              fontWeight: '600',
+                              cursor: 'pointer'
+                            }}
                           >
                             削除
                           </button>
@@ -1067,7 +1097,14 @@ export default function ScrumManagement() {
                 { key: 'bad', label: 'Problem (問題点)', icon: '⚠️', color: '#ef4444' },
                 { key: 'improve', label: 'Try (改善案)', icon: '💡', color: '#f59e0b' }
               ].map(({ key, label, icon, color }) => (
-                <div key={key} className="page-content">
+                <div key={key} style={{
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '1rem',
+                  boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  overflow: 'hidden'
+                }}>
                   <div style={{ padding: '1.5rem' }}>
                     <h3 style={{ 
                       marginBottom: '1rem', 
@@ -1092,7 +1129,13 @@ export default function ScrumManagement() {
                         .filter(item => item.type === key)
                         .sort((a, b) => b.votes - a.votes)
                         .map(item => (
-                          <div key={item.id} className="service-card" style={{ padding: '1rem' }}>
+                          <div key={item.id} style={{ 
+                            background: 'rgba(248, 250, 252, 0.8)',
+                            border: '1px solid rgba(228, 230, 235, 0.5)',
+                            borderRadius: '0.75rem',
+                            padding: '1rem',
+                            transition: 'all 0.3s ease'
+                          }}>
                             <p style={{ margin: '0 0 1rem 0', fontSize: '0.875rem', color: '#374151' }}>
                               {item.content}
                             </p>
@@ -1114,9 +1157,17 @@ export default function ScrumManagement() {
                                 </button>
                               </div>
                               <button
-                                onClick={() => deleteRetroItem(item.id)}
-                                className="action-btn delete"
-                                style={{ fontSize: '0.75rem' }}
+                                onClick={() => handleDeleteRetroItem(item.id)}
+                                style={{
+                                  background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '0.5rem',
+                                  padding: '0.25rem 0.5rem',
+                                  fontSize: '0.75rem',
+                                  fontWeight: '600',
+                                  cursor: 'pointer'
+                                }}
                               >
                                 削除
                               </button>
