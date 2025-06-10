@@ -679,56 +679,198 @@ export default function ScrumManagement() {
                 </h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
                   <div>
-                    <div className="form-group">
-                      <label>メンバー名</label>
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <label style={{ 
+                        display: 'block', 
+                        marginBottom: '0.5rem', 
+                        fontWeight: '600', 
+                        color: '#374151',
+                        fontSize: '0.875rem'
+                      }}>
+                        メンバー名
+                      </label>
                       <input
                         type="text"
                         value={newUpdate.member}
                         onChange={(e) => setNewUpdate({ ...newUpdate, member: e.target.value })}
                         placeholder="メンバー名を入力"
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem 1rem',
+                          border: '2px solid rgba(229, 231, 235, 0.8)',
+                          borderRadius: '0.75rem',
+                          fontSize: '0.875rem',
+                          transition: 'all 0.3s ease',
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          backdropFilter: 'blur(10px)'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#667eea';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = 'rgba(229, 231, 235, 0.8)';
+                          e.target.style.boxShadow = 'none';
+                        }}
                       />
                     </div>
-                    <div className="form-group">
-                      <label>昨日やったこと</label>
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <label style={{ 
+                        display: 'block', 
+                        marginBottom: '0.5rem', 
+                        fontWeight: '600', 
+                        color: '#374151',
+                        fontSize: '0.875rem'
+                      }}>
+                        昨日やったこと
+                      </label>
                       <textarea
                         value={newUpdate.yesterday}
                         onChange={(e) => setNewUpdate({ ...newUpdate, yesterday: e.target.value })}
                         placeholder="昨日の作業内容"
                         rows={3}
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem 1rem',
+                          border: '2px solid rgba(229, 231, 235, 0.8)',
+                          borderRadius: '0.75rem',
+                          fontSize: '0.875rem',
+                          transition: 'all 0.3s ease',
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          backdropFilter: 'blur(10px)',
+                          resize: 'vertical'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#667eea';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = 'rgba(229, 231, 235, 0.8)';
+                          e.target.style.boxShadow = 'none';
+                        }}
                       />
                     </div>
                   </div>
                   <div>
-                    <div className="form-group">
-                      <label>今日やること</label>
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <label style={{ 
+                        display: 'block', 
+                        marginBottom: '0.5rem', 
+                        fontWeight: '600', 
+                        color: '#374151',
+                        fontSize: '0.875rem'
+                      }}>
+                        今日やること
+                      </label>
                       <textarea
                         value={newUpdate.today}
                         onChange={(e) => setNewUpdate({ ...newUpdate, today: e.target.value })}
                         placeholder="今日の予定"
                         rows={3}
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem 1rem',
+                          border: '2px solid rgba(229, 231, 235, 0.8)',
+                          borderRadius: '0.75rem',
+                          fontSize: '0.875rem',
+                          transition: 'all 0.3s ease',
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          backdropFilter: 'blur(10px)',
+                          resize: 'vertical'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#667eea';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = 'rgba(229, 231, 235, 0.8)';
+                          e.target.style.boxShadow = 'none';
+                        }}
                       />
                     </div>
-                    <div className="form-group">
-                      <label>ブロッカー・課題</label>
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <label style={{ 
+                        display: 'block', 
+                        marginBottom: '0.5rem', 
+                        fontWeight: '600', 
+                        color: '#374151',
+                        fontSize: '0.875rem'
+                      }}>
+                        ブロッカー・課題
+                      </label>
                       <textarea
                         value={newUpdate.blockers}
                         onChange={(e) => setNewUpdate({ ...newUpdate, blockers: e.target.value })}
                         placeholder="課題や困っていること"
                         rows={2}
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem 1rem',
+                          border: '2px solid rgba(229, 231, 235, 0.8)',
+                          borderRadius: '0.75rem',
+                          fontSize: '0.875rem',
+                          transition: 'all 0.3s ease',
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          backdropFilter: 'blur(10px)',
+                          resize: 'vertical'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#667eea';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = 'rgba(229, 231, 235, 0.8)';
+                          e.target.style.boxShadow = 'none';
+                        }}
                       />
                     </div>
                   </div>
                 </div>
-                <button onClick={addDailyUpdate} className="btn btn-primary" style={{ marginTop: '1rem' }}>
+                <button 
+                  onClick={addDailyUpdate}
+                  style={{
+                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '0.75rem',
+                    padding: '0.75rem 1.5rem',
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px 0 rgba(102, 126, 234, 0.4)',
+                    transition: 'all 0.3s ease',
+                    transform: 'translateY(0)',
+                    marginTop: '1rem'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 8px 25px 0 rgba(102, 126, 234, 0.6)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 14px 0 rgba(102, 126, 234, 0.4)';
+                  }}
+                >
                   更新を追加
                 </button>
               </div>
             </div>
 
             {/* Daily Updates List */}
-            <div className="page-content">
-              <div style={{ padding: '1.5rem' }}>
-                <h3 style={{ marginBottom: '1rem', color: '#1f2937' }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '1rem',
+              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.3)'
+            }}>
+              <div style={{ padding: '2rem' }}>
+                <h3 style={{ 
+                  marginBottom: '1.5rem', 
+                  color: '#1f2937', 
+                  fontSize: '1.5rem',
+                  fontWeight: '600'
+                }}>
                   最近の更新 ({dailyUpdates.length})
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -783,39 +925,141 @@ export default function ScrumManagement() {
         {/* Retrospective Phase */}
         {currentPhase === 'retro' && (
           <div>
-            <div className="page-header">
-              <h2>スプリント振り返り</h2>
-              <p style={{ margin: 0, color: '#6b7280' }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '1rem',
+              padding: '2rem',
+              marginBottom: '2rem',
+              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.3)'
+            }}>
+              <h2 style={{ 
+                margin: '0 0 0.5rem 0', 
+                fontSize: '2rem', 
+                fontWeight: '700',
+                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textFillColor: 'transparent'
+              }}>
+                スプリント振り返り
+              </h2>
+              <p style={{ margin: 0, color: '#6b7280', fontSize: '1.1rem', fontWeight: '500' }}>
                 スプリントの成果と改善点を振り返ります
               </p>
             </div>
 
             {/* Add Retro Item Form */}
-            <div className="page-content" style={{ marginBottom: '2rem' }}>
-              <div style={{ padding: '1.5rem' }}>
-                <h3 style={{ marginBottom: '1rem', color: '#1f2937' }}>振り返り項目追加</h3>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '1rem',
+              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              marginBottom: '2rem'
+            }}>
+              <div style={{ padding: '2rem' }}>
+                <h3 style={{ 
+                  marginBottom: '1.5rem', 
+                  color: '#1f2937', 
+                  fontSize: '1.5rem',
+                  fontWeight: '600'
+                }}>
+                  振り返り項目追加
+                </h3>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'end' }}>
-                  <div className="form-group" style={{ marginBottom: 0, minWidth: '120px' }}>
-                    <label>カテゴリ</label>
+                  <div style={{ marginBottom: 0, minWidth: '180px' }}>
+                    <label style={{ 
+                      display: 'block', 
+                      marginBottom: '0.5rem', 
+                      fontWeight: '600', 
+                      color: '#374151',
+                      fontSize: '0.875rem'
+                    }}>
+                      カテゴリ
+                    </label>
                     <select
                       value={newRetroItem.type}
                       onChange={(e) => setNewRetroItem({ ...newRetroItem, type: e.target.value as any })}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem 1rem',
+                        border: '2px solid rgba(229, 231, 235, 0.8)',
+                        borderRadius: '0.75rem',
+                        fontSize: '0.875rem',
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        backdropFilter: 'blur(10px)',
+                        cursor: 'pointer'
+                      }}
                     >
                       <option value="good">Keep (良かったこと)</option>
                       <option value="bad">Problem (問題点)</option>
                       <option value="improve">Try (改善案)</option>
                     </select>
                   </div>
-                  <div className="form-group" style={{ marginBottom: 0, flex: 1 }}>
-                    <label>内容</label>
+                  <div style={{ marginBottom: 0, flex: 1 }}>
+                    <label style={{ 
+                      display: 'block', 
+                      marginBottom: '0.5rem', 
+                      fontWeight: '600', 
+                      color: '#374151',
+                      fontSize: '0.875rem'
+                    }}>
+                      内容
+                    </label>
                     <input
                       type="text"
                       value={newRetroItem.content}
                       onChange={(e) => setNewRetroItem({ ...newRetroItem, content: e.target.value })}
                       placeholder="振り返り内容を入力"
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem 1rem',
+                        border: '2px solid rgba(229, 231, 235, 0.8)',
+                        borderRadius: '0.75rem',
+                        fontSize: '0.875rem',
+                        transition: 'all 0.3s ease',
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        backdropFilter: 'blur(10px)'
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = '#667eea';
+                        e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = 'rgba(229, 231, 235, 0.8)';
+                        e.target.style.boxShadow = 'none';
+                      }}
                     />
                   </div>
-                  <button onClick={addRetroItem} className="btn btn-primary">追加</button>
+                  <button 
+                    onClick={addRetroItem}
+                    style={{
+                      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '0.75rem',
+                      padding: '0.75rem 1.5rem',
+                      fontSize: '0.875rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 14px 0 rgba(102, 126, 234, 0.4)',
+                      transition: 'all 0.3s ease',
+                      transform: 'translateY(0)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 8px 25px 0 rgba(102, 126, 234, 0.6)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 14px 0 rgba(102, 126, 234, 0.4)';
+                    }}
+                  >
+                    追加
+                  </button>
                 </div>
               </div>
             </div>
